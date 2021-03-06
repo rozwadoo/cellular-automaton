@@ -6,10 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "generation.h"
+#include "images.h"
 
 matrix_t *m;
 
-void iterate (int n)
+void iterate (int n, FILE *out, int g, char *f)
 {
     int h = m->rn;
     int w = m->cn;
@@ -48,9 +49,28 @@ void iterate (int n)
                 else m->e[i*w + j] = 2;
             }
         }
+	
+	//DODANE
+	if(l == n-1)
+	{
+		fprintf(out, "%d %d\n", m->rn, m->cn);
+		int i,j;
+		for(i = 0; i < m->rn; i++)
+		{
+			for(j = 0; j < m->cn; j++)
+			{
+				if( m->e[i * m->cn + j] == 2)
+				{
+					fprintf(out, "%d %d\n", i, j);
+				}
+			}
+		}
+	}
+	to_pbm(m, g, f);
 
 	//Wypisywanie testowe
-        for(int i = 0; i < h; ++i)
+        /*
+	for(int i = 0; i < h; ++i)
         {
             printf("\n");
             for(int j = 0; j < w; ++j)
@@ -59,6 +79,7 @@ void iterate (int n)
             }
         }
 	printf("\n");
+	*/
 
     }
 }

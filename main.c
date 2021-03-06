@@ -50,14 +50,14 @@ int main(int argc, char **argv)
 	}
 	
 	FILE *p_wej = fopen(p, "r");
-	
 	if(p_wej == NULL)
 	{
 		printf("Nie mogę odczytać pliku wejściowego %s.\n", p);
 		exit (EXIT_FAILURE);
 	}
-	
 	start_matrix(p_wej);
-	iterate(n);
+	
+	FILE *out = fopen(w, "w");
+	iterate(n, out, g, f);
 
 }

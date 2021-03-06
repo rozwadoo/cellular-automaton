@@ -5,12 +5,11 @@
 3 - vanishing */
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct {
-    int rn;
-    int cn;
-    int *e;
-} matrix_t;
-void iterate ( matrix_t * m, int n)
+#include "generation.h"
+
+matrix_t *m;
+
+void iterate (int n)
 {
     int h = m->rn;
     int w = m->cn;
@@ -49,6 +48,8 @@ void iterate ( matrix_t * m, int n)
                 else m->e[i*w + j] = 2;
             }
         }
+
+	//Wypisywanie testowe
         for(int i = 0; i < h; ++i)
         {
             printf("\n");
@@ -57,13 +58,58 @@ void iterate ( matrix_t * m, int n)
                 printf("%d ", m->e[i*w + j]);
             }
         }
+	printf("\n");
+
     }
 }
+
+
+void start_matrix(FILE *in)
+{
+	//Zmienne pomocnicze
+	int f;
+	int s;
+
+	//Wczytanie pliku i allokacja pamięcie
+	//FILE *in = fopen(plik, "r");
+	m = malloc(sizeof *m);
+	
+	//Alokacja pamięci dla tablicy
+	fscanf(in, "%d %d", &f, &s);
+	m->e = malloc(sizeof(int) * f * s);
+	m->rn = f;
+	m->cn = s;
+
+	//Wypełnienie tablicy zerami
+	int i;
+	int j;
+	for(i = 0; i < m->rn; i++)
+	{
+		for(j = 0; j < m->cn; j++)
+		{
+			m->e[i * m->cn + j] = 0;
+		}
+	}
+	
+	//Wprowazenie żywych kompurek
+	while( fscanf(in, "%d %d", &f, &s) == 2)
+	{
+		m->e[f * m->cn + s] = 2;
+	}	
+
+}
+
+
+
+
+
+
+/*
 int main( int argc, char **argv)
 {
     int n = atoi(argv[1]);
-    matrix_t *m = malloc (sizeof *m);
-  if (m == NULL)
+    m = malloc(sizeof *m);
+    if (m == NULL)
     return NULL;
   if ((m->e =
        malloc ((size_t) 5 * (size_t) 4 * sizeof *m->e)) == NULL) {
@@ -85,6 +131,7 @@ int main( int argc, char **argv)
                 printf("%d ", m->e[i*m->cn + j]);
             }
         }
-    iterate(m, n);
+    iterate(n);
     return 0;
 }
+*/

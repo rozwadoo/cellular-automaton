@@ -119,9 +119,11 @@ void start_matrix(FILE *in, int g)
 	if(g > 0)mkdir("Stworzone_pliki", 0777);
 		
 	//Wprowazenie żywych kompurek
-	while( fscanf(in, "%d %d", &f, &s) == 2)
+	s = 0;
+	while( fscanf(in, "%d", &f) == 1)
 	{
-		m->e[f * m->cn + s] = 2;
+		if(f == 2) m->e[s] = 2;
+		++s;
 	}	
 
 }
@@ -162,3 +164,4 @@ int main( int argc, char **argv)
     return 0;
 }
 */
+

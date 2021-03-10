@@ -9,21 +9,24 @@
 
 #include "generation.h"
 
+//Przygotowanie do tworzenia plików
+int numer=1;
+int i;
+char *kon = ".pbm";
+char nazwa[100];
+char nr[10];
+
 void to_pbm(matrix_t * m, int g, char *f)
 {
-	//Stworzenie folderu na grafiki
-	if(g > 0) 
-		mkdir("stworzone_pliki", 0777);
+	//Tworzenie nazw plików
+	strcpy(nazwa, "");
+	strcat(nazwa, f);
+	sprintf(nr, "%i", numer++);
+	strcat(nazwa, nr);
+	strcat(nazwa, kon);
+	printf("%s\n", nazwa);
+	
+	//Tworzenie plików
 		
-	int i;
-	for(i = 0; i < g; i++)
-	{
-		char nazwa[100];
-		strcpy(nazwa, f);
-		char liczba[10];
-		sprintf(liczba, "%d", i);
-		strcat(nazwa, liczba);
-		printf("%s\n", nazwa); 
-	}
 }
 

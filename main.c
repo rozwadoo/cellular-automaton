@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 		exit( EXIT_FAILURE );
 	}
 
-	while((opt = getopt (argc, argv, "n:g:p:w:f")) != -1)
+	while((opt = getopt (argc, argv, "n:g:p:w:f:")) != -1)
 	{
 		switch (opt)
 		{
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 		printf("Nie mogę odczytać pliku wejściowego %s.\n", p);
 		exit (EXIT_FAILURE);
 	}
-	start_matrix(p_wej);
+	start_matrix(p_wej, g);
 	
 	FILE *out = fopen(w, "w");
 	iterate(n, out, g, f);

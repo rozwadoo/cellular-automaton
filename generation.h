@@ -12,6 +12,6 @@ typedef struct {
 
 void iterate(int n, FILE *out, int g, char* f);
 
-void start_matrix(FILE *in);
+void start_matrix(FILE *in, int g);
 
 #endif

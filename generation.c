@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include "generation.h"
 #include "images.h"
+#include <sys/stat.h>
+#include <sys/types.h>
+
 
 matrix_t *m;
 
@@ -85,7 +88,7 @@ void iterate (int n, FILE *out, int g, char *f)
 }
 
 
-void start_matrix(FILE *in)
+void start_matrix(FILE *in, int g)
 {
 	//Zmienne pomocnicze
 	int f;
@@ -112,6 +115,9 @@ void start_matrix(FILE *in)
 		}
 	}
 	
+	//Stworzenie folderu
+	if(g > 0)mkdir("Stworzone_pliki", 0777);
+		
 	//Wprowazenie żywych kompurek
 	while( fscanf(in, "%d %d", &f, &s) == 2)
 	{

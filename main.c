@@ -5,7 +5,7 @@
 #include "generation.h"
 
 char *usage = 
-	"Użycie: -n liczba_generacji -g liczba_grafik -p plik_wejściowy -w plik_wyjściowy -f nazwa_grafik";
+	"Użycie: -n liczba_generacji -g liczba_grafik -p plik_wejściowy -w plik_wyjściowy -f nazwa_grafik -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)";
 
 int main(int argc, char **argv)
 {
@@ -14,16 +14,17 @@ int main(int argc, char **argv)
 	char *p;
 	char *w;
 	char *f;
+	int s = 0;	//domyślnie rozważane jest sąsiedztwo Moore'a
 	int opt;
 
-	if(argc < 5)
+	if(argc < 6)
 	{
 		printf("Za mało argumentów.\n");
 		puts(usage);
 		exit( EXIT_FAILURE );
 	}
 
-	while((opt = getopt (argc, argv, "n:g:p:w:f:")) != -1)
+	while((opt = getopt (argc, argv, "n:g:p:w:f:s:")) != -1)
 	{
 		switch (opt)
 		{
@@ -46,6 +47,9 @@ int main(int argc, char **argv)
 			case 'f':
 				f = optarg;
 				break;
+			case 's':
+				s = atoi(optarg);
+				break;
 		}
 	}
 	
@@ -58,6 +62,6 @@ int main(int argc, char **argv)
 	start_matrix(p_wej, g);
 	
 	FILE *out = fopen(w, "w");
-	iterate(n, out, g, f);
+	iterate(n, out, g, f, s);
 
 }

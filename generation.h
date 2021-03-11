@@ -10,7 +10,7 @@ typedef struct {
 	int *e;
 } matrix_t;
 
-void iterate(int n, FILE *out, int g, char* f);
+void iterate(int n, FILE *out, int g, char* f, int rs);
 
 void start_matrix(FILE *in, int g);
 

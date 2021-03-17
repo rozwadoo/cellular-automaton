@@ -14,4 +14,6 @@ void iterate(int n, FILE *out, int g, char* f, int rs);
 
 void start_matrix(FILE *in, int g);
 
+void free_matrix();
+
 #endif

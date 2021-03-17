@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-
 matrix_t *m;
 
 void iterate (int n, FILE *out, int g, char *f, int rs)
@@ -99,13 +98,14 @@ void start_matrix(FILE *in, int g)
 	int f;
 	int s;
 
-	//Wczytanie pliku i allokacja pamięcie
-	//FILE *in = fopen(plik, "r");
-	m = malloc(sizeof *m);
-	
 	//Alokacja pamięci dla tablicy
+	m = malloc(sizeof *m);
 	fscanf(in, "%d %d", &f, &s);
 	m->e = malloc(sizeof(int) * f * s);
+	if(m == NULL){
+		printf("Błąd allokacji pamięci.");
+		exit (EXIT_FAILURE);
+	}
 	m->rn = f;
 	m->cn = s;
 
@@ -132,7 +132,10 @@ void start_matrix(FILE *in, int g)
 }
 
 
-
+void free_matrix()
+{
+	free(m);
+}
 
 
 

@@ -12,16 +12,34 @@
 #include "generation.h"
 
 char *przed = "Stworzone_pliki/";
-char *kon = ".pbm";
+char *kon1 = ".pbm";
+char *kon2 = ".png";
 char nr[10];
-char nazwa[100];
 
-void nazwa_pliku(char *f, int numer);
+void nazwa_pliku_pbm(char *nazwa, char *f, int numer)
+{
+	strcpy(nazwa, "");
+	strcpy(nazwa, przed);
+	strcat(nazwa, f);
+	sprintf(nr, "%i", numer);
+	strcat(nazwa, nr);
+	strcat(nazwa, kon1);
+}
+
+void nazwa_pliku_png(char *nazwa, char *f, int numer)
+{
+	strcpy(nazwa, "");
+	strcpy(nazwa, przed);
+	strcat(nazwa, f);
+	sprintf(nr, "%i", numer);
+	strcat(nazwa, nr);
+	strcat(nazwa, kon2);
+}
 
 void to_pbm(matrix_t * m, int g, char *f)
 {
-	nazwa_pliku(f, g);
-	
+	char nazwa[100];
+	nazwa_pliku_pbm(nazwa, f, g);
 	//Tworzenie plików
 	FILE *gra = fopen(nazwa, "w");
 	
@@ -33,7 +51,7 @@ void to_pbm(matrix_t * m, int g, char *f)
 	fprintf(gra, "P1\n"); 	
 	fprintf(gra, "#komentarz\n"); 	
 	fprintf(gra, "%d %d\n", m->rn, m->cn); 		
-	
+	printf("XDDDDDDDDDDD");
 	int i,j;
 	for(i = 0; i < m->rn; i++)
 	{
@@ -53,15 +71,3 @@ void stworz_folder()
 {
 	mkdir("Stworzone_pliki", 0777 );
 }
-
-void nazwa_pliku(char *f, int numer)
-{
-	//Tworzenie nazw plików
-	strcpy(nazwa, "");
-	strcpy(nazwa, przed);
-	strcat(nazwa, f);
-	sprintf(nr, "%i", numer);
-	strcat(nazwa, nr);
-	strcat(nazwa, kon);
-}
-

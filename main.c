@@ -4,6 +4,7 @@
 
 #include "generation.h"
 #include "images.h"
+#include "to_png.h"
 
 void help();
 
@@ -62,6 +63,8 @@ int main(int argc, char **argv)
 	matrix_t * m = malloc(sizeof *m);
 
 	start_matrix(m, p_wej);
+	
+	printf("%d %d\n", m->rn, m->cn);
 
 	uzupelnij_matrix(m, p_wej);
 	
@@ -80,10 +83,12 @@ int main(int argc, char **argv)
 	{
 		iterate(m, s);
 		if(i == n-1)zapis_koncowy(m, out);
-		if(i < g)to_pbm(m, i+1, f);
+		if(i < g)to_png(m, i+1, f);
+		//if(i < g)to_pbm(m, i+1, f);
 	}
 
 	free_matrix(m);
+
 }
 
 

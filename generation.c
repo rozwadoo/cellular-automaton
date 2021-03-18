@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "generation.h"
-#include "images.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -96,18 +95,21 @@ void start_matrix(matrix_t * m, FILE *in)
 	int j;
 	
 	//Alokacja pamięci dla tablicy
-	fscanf(in, "%d %d", &f, &s);
+	fscanf(in, "%d %d", &(f), &(s));
 	m->e = malloc(sizeof(int *) * f );
+	m->rn = f;
+	m->cn = s;
+	printf("%d %d\n", m->rn, m->cn);
 	for(i = 0; i < f; i++)
 	{
 		m->e[i] = malloc(sizeof(int) * s);
 	}
-	if(m == NULL){
+
+	if(m == NULL)
+	{
 		printf("Błąd allokacji pamięci.");
 		exit (EXIT_FAILURE);
 	}
-	m->rn = f;
-	m->cn = s;
 }
 
 void uzupelnij_matrix(matrix_t * m, FILE *in)

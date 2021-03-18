@@ -65,8 +65,6 @@ int main(int argc, char **argv)
 
 	start_matrix(m, p_wej);
 	
-	printf("%d %d\n", m->rn, m->cn);
-
 	uzupelnij_matrix(m, p_wej);
 	
 	stworz_folder();

@@ -99,7 +99,6 @@ void start_matrix(matrix_t * m, FILE *in)
 	m->e = malloc(sizeof(int *) * f );
 	m->rn = f;
 	m->cn = s;
-	printf("%d %d\n", m->rn, m->cn);
 	for(i = 0; i < f; i++)
 	{
 		m->e[i] = malloc(sizeof(int) * s);
@@ -114,18 +113,7 @@ void start_matrix(matrix_t * m, FILE *in)
 
 void uzupelnij_matrix(matrix_t * m, FILE *in)
 {
-	//Wypełnienie tablicy zerami
-	int i, j, h, w;
-	h = m->rn;
-	w = m->cn;
-	for(i = 0; i < h; i++)
-	{
-		for(j = 0; j < w; j++)
-		{
-			m->e[i][j] = 0;
-		}
-	}	
-	//Wprowazenie żywych kompurek
+	int i, j;
 	while( fscanf(in, "%d %d", &i, &j) == 2)
 	{
 		m->e[i][j] = 2;

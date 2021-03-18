@@ -12,7 +12,7 @@ static pixel_t * pixel_at (bitmap_t * bitmap, int x, int y)
     return bitmap->pixels + bitmap->width * y + x;
 }
 
-static int save_png_to_file (bitmap_t *bitmap, const char *path, int qq)
+static int save_png_to_file (bitmap_t *bitmap, const char *path)
 {
     FILE * fp;      
     png_structp png_ptr = NULL;
@@ -20,7 +20,7 @@ static int save_png_to_file (bitmap_t *bitmap, const char *path, int qq)
     size_t x,y;
     png_byte ** row_pointers = NULL;
     int status = -1;
-    int pixel_size = qq;
+    int pixel_size = 3;
     int depth = 8;
 
     fp = fopen (path, "wb");
@@ -90,33 +90,31 @@ static int save_png_to_file (bitmap_t *bitmap, const char *path, int qq)
 void to_png(matrix_t * m, int g, char *f)
 {
     bitmap_t image;
-    int x;
-    int y;
     int status;
-    int h = m->rn;
-    int w = m->cn;
+    int x = m->rn;//h
+    int y = m->cn;//w
 
     status = 0;
 
-        int qq = 1;
-        image.width = h*qq;
-        image.height = w*qq;
+        int qq = 32;
+        image.width = y*qq;
+        image.height = x*qq;
 
     image.pixels = calloc (image.width * image.height, sizeof (pixel_t));
     /* Write the image to a file 'fruit.png'. */
-        for(x = 0; x < h; x++)
+    int q1,q2;   
+    for(q1 = 0; q1 < x; q1++)
 	{
-		for(y = 0; y < w; y++)
+		for(q2 = 0; q2 < y; q2++)
 		{
-			if(m->e[x][y] == 2)
+			if(m->e[q1][q2] == 2)
         		{
-				printf("XDDDD\n");
 				int i,j;
                 		for(i = 0; i < qq; i++)
                 		{
                         		for(j = 0; j < qq; j++)
                        			{
-   	               				pixel_t * pixel = pixel_at (&image, h*qq+i, w*qq+j);
+   	               				pixel_t * pixel = pixel_at (&image, q1*qq+i, q2*qq+j);
         	                        	pixel->red = (int)255;
         	                       		pixel->green = (int)255;
         	                       		pixel->blue = (int)255;
@@ -128,9 +126,7 @@ void to_png(matrix_t * m, int g, char *f)
 	char nazwa[100];
 	nazwa_pliku_png(nazwa, f, g);
 
-	printf("%s\n", nazwa);
-
-    if (save_png_to_file (& image, nazwa, qq)) {
+    if (save_png_to_file (&image, nazwa )) {
         fprintf (stderr, "Error writing file.\n");
         status = -1;
     }

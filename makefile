@@ -1,6 +1,8 @@
 all: ca
 ca:  main.o generation.o images.o to_png.o to_pbm.o
 	cc -o ca main.o generation.o images.o to_png.o to_pbm.o -lpng
+ggdb:  main.o generation.o images.o to_png.o to_pbm.o
+	cc -o ca main.o generation.o images.o to_png.o to_pbm.o -lpng -ggdb
 main.o: main.c generation.h
 	cc -c main.c 
 generation.o: generation.c generation.h images.h

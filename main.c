@@ -80,7 +80,9 @@ int main(int argc, char **argv)
 		exit (EXIT_FAILURE);
 	}
 	
-	start_matrix(p_wej, g);
+	matrix_t * m = NULL;
+
+	start_matrix(m, p_wej, g);
 	
 	FILE *out = fopen(w, "w");
 	if(out == NULL)
@@ -89,6 +91,7 @@ int main(int argc, char **argv)
 		exit (EXIT_FAILURE);
 	}
 	
-	iterate(n, out, g, f, s);
-
+	iterate(m, n, out, g, f, s);
+	
+	free_matrix(m);
 }

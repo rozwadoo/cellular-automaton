@@ -10,9 +10,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-matrix_t *m;
 
-void iterate (int n, FILE *out, int g, char *f, int rs)
+void iterate (matrix_t * m, int n, FILE *out, int g, char *f, int rs)
 {
     int h = m->rn;
     int w = m->cn;
@@ -92,7 +91,7 @@ void iterate (int n, FILE *out, int g, char *f, int rs)
 }
 
 
-void start_matrix(FILE *in, int g)
+void start_matrix(matrix_t * m, FILE *in, int g)
 {
 	//Zmienne pomocnicze
 	int f;
@@ -132,7 +131,7 @@ void start_matrix(FILE *in, int g)
 }
 
 
-void free_matrix()
+void free_matrix(matrix_t * m)
 {
 	free(m);
 }

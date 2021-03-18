@@ -3,25 +3,24 @@
 #include <getopt.h>
 
 #include "generation.h"
+#include "images.h"
 
-char *usage = 
-	"Użycie:\n"
-	"   -n liczba_generacji (domyślnie 100)\n" 
-	"   -g liczba_grafik (domyślnie 100)\n"
-	"   -p plik_wejściowy (domyślnie test/pistolet)\n"
-	"   -w plik_wyjściowy (domyślnie ostatnia_generacja.txt)\n" 
-	"   -f nazwa_grafik (domyślnie grafika)\n"
-	"   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)";
+void help();
 
 int main(int argc, char **argv)
 {
 	int n;
 	int g;
-	char *p;
-	char *w;
-	char *f;
+	char *p = NULL;
+	char *w = NULL;
+	char *f = NULL;
 	int s = 0;	//domyślnie rozważane jest sąsiedztwo Moore'a
 	int opt;
+	
+	if(argc < 5){
+		help();
+		return 1;
+	}
 
 	while((opt = getopt (argc, argv, "n:g:p:w:f:s:")) != -1)
 	{
@@ -52,46 +51,49 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	//Nadawanie wartości domyślnych
-	if(n == 0){
-		n = 100;
-	}
-
-	if(g == 0){
-		n = 100;
-	}
-	
-	if(p == NULL){
-		p = "test";
-	}
-	
-	if(w == NULL){
-		w = "ostatniageneracja.txt";
-	}
-	
-	if(f == NULL){
-		f= "";
-	}
-	
 	FILE *p_wej = fopen(p, "r");
 	if(p_wej == NULL)
 	{
 		printf("Nie mogę odczytać pliku wejściowego %s.\n", p);
+		help();
 		exit (EXIT_FAILURE);
 	}
 	
-	matrix_t * m = NULL;
+	matrix_t * m = malloc(sizeof *m);
 
-	start_matrix(m, p_wej, g);
+	start_matrix(m, p_wej);
+
+	uzupelnij_matrix(m, p_wej);
 	
+	stworz_folder();
+
 	FILE *out = fopen(w, "w");
 	if(out == NULL)
 	{
 		printf("Nie mogę odczytać pliku wyjściowego %s.\n", w);
+		help();
 		exit (EXIT_FAILURE);
 	}
 	
-	iterate(m, n, out, g, f, s);
-	
+	int i;
+	for(i = 0; i < n; i++)
+	{
+		iterate(m, s);
+		if(i == n-1)zapis_koncowy(m, out);
+		if(i < g)to_pbm(m, i+1, f);
+	}
+
 	free_matrix(m);
+}
+
+
+
+void help(){
+	printf("Użycie: ./ca\n");
+	printf("   -n liczba_generacji\n"); 
+	printf("   -g liczba_grafik \n");
+	printf("   -p plik_wejściowy \n");
+	printf("   -w plik_wyjściowy \n");
+	printf("   -f nazwa_grafik \n");
+	printf("   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
 }

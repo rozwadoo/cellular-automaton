@@ -7,28 +7,67 @@
 #include "images.h"
 #include "generation.h"
 
-static pixel_t * pixel_at (bitmap_t * bitmap, int x, int y)
+void save_png_to_file (matrix_t * m, const char *path, int qq)
 {
-    return bitmap->pixels + bitmap->width * y + x;
-}
-
-static int save_png_to_file (bitmap_t *bitmap, const char *path)
-{
-    FILE * fp;      
     png_structp png_ptr = NULL;
+    
     png_infop info_ptr = NULL;
-    size_t x,y;
-    png_byte ** row_pointers = NULL;
-    int status = -1;
-    int pixel_size = 3;
-    int depth = 8;
+    
+    png_bytep *row_pointers = NULL;
+    
+    png_byte color_type;
+    png_byte bit_depth;
+    
+    color_type = PNG_COLOR_TYPE_GRAY;
 
-    fp = fopen (path, "wb");
+    int i, j, x, y;
+
+    int height = m->rn * 8;
+    int width = m->cn * 8;
+    int depth = 8;
+    
+    
+    	row_pointers = (png_bytep*) malloc(sizeof(png_bytep)*height);
+	for(i = 0; i < height; i++)
+		row_pointers[i] = (png_byte*) malloc(sizeof(png_byte) * width);
+
+	for(i = 0; i < height; i += 8)
+	{
+		for(j = 0; j < width; j += 8)
+		{
+			if(m->e[i/8][j/8] == 2)
+			{
+				for(x = 0; x < 8; x++)
+				{
+					for(y = 0; y < 8; y++)
+					{
+						row_pointers[i + y][j + x] = 255;
+					}
+				}
+			}
+			else
+			{
+				for(x = 0; x < 8; x++)
+				{
+					for(y = 0; y < 8; y++)
+					{
+						row_pointers[i + y][j + x] = 0;
+					}
+				}
+
+			}
+		}
+	}
+
+
+
+    FILE *fp = fopen (path, "wb");
     if (! fp) {
-        goto fopen_failed;
+    	printf("ra");
     }
 
     png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    
     if (png_ptr == NULL) {
         goto png_create_write_struct_failed;
     }
@@ -38,42 +77,31 @@ static int save_png_to_file (bitmap_t *bitmap, const char *path)
         goto png_create_info_struct_failed;
     }
 
+    png_init_io (png_ptr, fp);
+    
     if (setjmp (png_jmpbuf (png_ptr))) {
         goto png_failure;
     }
 
 	    png_set_IHDR (png_ptr,
                   info_ptr,
-                  bitmap->width,
-                  bitmap->height,
+                  width,
+                  height,
                   depth,
-                  PNG_COLOR_TYPE_RGB,
+                  color_type,
                   PNG_INTERLACE_NONE,
-                  PNG_COMPRESSION_TYPE_DEFAULT,
-                  PNG_FILTER_TYPE_DEFAULT);
+                  PNG_COMPRESSION_TYPE_BASE,
+                  PNG_FILTER_TYPE_BASE);
 
+	png_write_info(png_ptr, info_ptr);
+	
+	png_write_image(png_ptr, row_pointers);
+	
+	png_write_end(png_ptr, NULL);
 
-    row_pointers = png_malloc (png_ptr, bitmap->height * sizeof (png_byte *));
-    for (y = 0; y < bitmap->height; y++) {
-        png_byte *row =
-            png_malloc (png_ptr, sizeof (uint8_t) * bitmap->width * pixel_size);
-        row_pointers[y] = row;
-        for (x = 0; x < bitmap->width; x++) {
-            pixel_t * pixel = pixel_at (bitmap, x, y);
-            *row++ = pixel->red;
-            *row++ = pixel->green;
-            *row++ = pixel->blue;
-        }
-    }
+	png_destroy_write_struct(&png_ptr, &info_ptr);
 
-    png_init_io (png_ptr, fp);
-    png_set_rows (png_ptr, info_ptr, row_pointers);
-    png_write_png (png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
-
-
-    status = 0;
-
-    for (y = 0; y < bitmap->height; y++) {
+    for (y = 0; y < height; y++) {
         png_free (png_ptr, row_pointers[y]);
     }
     png_free (png_ptr, row_pointers);
@@ -83,53 +111,14 @@ static int save_png_to_file (bitmap_t *bitmap, const char *path)
     png_destroy_write_struct (&png_ptr, &info_ptr);
  png_create_write_struct_failed:
     fclose (fp);
- fopen_failed:
-    return status;
+
 }
 
 void to_png(matrix_t * m, int g, char *f)
 {
-    bitmap_t image;
-    int status;
-    int x = m->rn;//h
-    int y = m->cn;//w
-
-    status = 0;
-
-        int qq = 32;
-        image.width = y*qq;
-        image.height = x*qq;
-
-    image.pixels = calloc (image.width * image.height, sizeof (pixel_t));
-    /* Write the image to a file 'fruit.png'. */
+    int qq = 8;
     int q1,q2;   
-    for(q1 = 0; q1 < x; q1++)
-	{
-		for(q2 = 0; q2 < y; q2++)
-		{
-			if(m->e[q1][q2] == 2)
-        		{
-				int i,j;
-                		for(i = 0; i < qq; i++)
-                		{
-                        		for(j = 0; j < qq; j++)
-                       			{
-   	               				pixel_t * pixel = pixel_at (&image, q1*qq+i, q2*qq+j);
-        	                        	pixel->red = (int)255;
-        	                       		pixel->green = (int)255;
-        	                       		pixel->blue = (int)255;
-        	       			}
-        		        }
-        		}
-		}
-	}
-	char nazwa[100];
-	nazwa_pliku_png(nazwa, f, g);
-
-    if (save_png_to_file (&image, nazwa )) {
-        fprintf (stderr, "Error writing file.\n");
-        status = -1;
-    }
-
-    free (image.pixels);
+    char nazwa[100];
+    nazwa_pliku_png(nazwa, f, g);
+    save_png_to_file (m, nazwa, qq ) ;
 }

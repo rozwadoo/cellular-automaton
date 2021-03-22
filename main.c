@@ -82,8 +82,8 @@ int main(int argc, char **argv)
 	{
 		iterate(m, s);
 		if(i == n-1)zapis_koncowy(m, out);
-		//if(i < g)to_png(m, i+1, f);
-		if(i < g)to_pbm(m, i+1, f);
+		if(i < g)to_png(m, i+1, f);
+		//if(i < g)to_pbm(m, i+1, f);
 	}
 
 	free_matrix(m);

@@ -64,9 +64,9 @@ void zapis_koncowy(matrix_t * m, FILE *out)
 	{
 		for(j = 0; j < m->cn; j++)
 		{
-			if( m->e[i][j] == 2)
-				fprintf(out, "%d %d\n", i, j);
+			fprintf(out, "%d ", m->e[i][j]);
 		}
+		fprintf(out, "\n");
 	}
 }	 
 
@@ -113,12 +113,16 @@ void start_matrix(matrix_t * m, FILE *in)
 
 void uzupelnij_matrix(matrix_t * m, FILE *in)
 {
-	int i, j;
-	while( fscanf(in, "%d %d", &i, &j) == 2)
+	int i, j = 0;
+	int w = m->cn;
+	while( fscanf(in, "%d", &i) == 1)
 	{
-		m->e[i][j] = 2;
+		if(i == 1) m->e[j/w][j%w] = 2;
+		else
+			m->e[j/w][j%w] = 0;
+		
+		j++;
 	}	
-
 }
 
 

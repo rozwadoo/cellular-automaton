@@ -8,9 +8,9 @@
 #include "generation.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "zasady_gry.h"
 
-
-void iterate (matrix_t * m, int rs)
+void iterate (matrix_t * m, int rs, int b)
 {
     int h = m->rn;
     int w = m->cn;
@@ -32,6 +32,9 @@ void iterate (matrix_t * m, int rs)
 			 if(i != h - 1 && j!= 0) if(m->e[i+1][j-1] > 1) s += 1;		//lewy, dolny sąsiad
                 	if(i != h - 1 && j!= w - 1) if(m->e[i+1][j+1] > 1) s += 1;	//prawy, dolny sąsiad
                 }
+
+		if(b == 1) s += licz_boki(i, j, h, w);
+
 		if(m->e[i][j] == 2) // jeśli badana komórka jest była żywa
 		{
                     if(s == 2 || s == 3) m->e[i][j] = 2;

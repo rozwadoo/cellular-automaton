@@ -12,15 +12,16 @@ void help();
 int main(int argc, char **argv)
 {
 	int n;
-	int g;
+	int g = 0;
 	char *p = NULL;
 	char *w = NULL;
 	char *f = "";
 	int s = 0;	//domyślnie rozważane jest sąsiedztwo Moore'a
 	int opt;
 	int o = 0;
+	int b = 0;
 	
-	while((opt = getopt (argc, argv, "n:g:p:w:f:s:o:")) != -1)
+	while((opt = getopt (argc, argv, "n:g:p:w:f:s:o:b:")) != -1)
 	{
 		switch (opt)
 		{
@@ -51,6 +52,10 @@ int main(int argc, char **argv)
 			case 'o':
 				o = atoi(optarg);
 				break;
+
+			case 'b':
+			        b = atoi(optarg);	
+				break;
 		}
 	}
 
@@ -59,7 +64,6 @@ int main(int argc, char **argv)
 		help();
 		exit (EXIT_FAILURE);
 	}
-
 	if( g == 0)g = n;
 	
 	if(p == NULL){
@@ -106,10 +110,14 @@ int main(int argc, char **argv)
 	int i;
 	for(i = 0; i < n; i++)
 	{
-		iterate(m, s);
+		iterate(m, s, b);
 		if(i == n-1)zapis_koncowy(m, out);
-		if(o == 0 && i < g)to_png(m, i+1, f);
-		if(o == 1 && i < g)to_pbm(m, i+1, f);
+		if(o == 0)
+		{
+			if(i < g)to_png(m, i+1, f);
+			else
+			if(i < g)to_pbm(m, i+1, f);
+		}
 	}
 
 	//Zwalnianie pamięci
@@ -128,4 +136,5 @@ void help(){
 	printf("   -f nazwa_grafik \n");
 	printf("   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
 	printf("   -o typ tworzonych plików (0- PNG, 1- PBM)(domyślnie 0)\n");
+	printf("   -b zmienia zasady gry (0- boki są komurkami martwymi, 1- boki są komurkami żywymi\n");
 }

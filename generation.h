@@ -11,7 +11,7 @@ typedef struct {
 } matrix_t;
 
 //Nowy kod tworzy jedną generacje
-void iterate(matrix_t * m, int rs);
+void iterate(matrix_t * m, int rs, int b);
 
 //Alokuje dynamicznie tablie podaną w kodzie 
 void start_matrix(matrix_t * m, FILE *in);

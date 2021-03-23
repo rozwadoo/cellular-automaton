@@ -20,8 +20,14 @@ int main(int argc, char **argv)
 	int opt;
 	int o = 0;
 	int b = 0;
-	
-	while((opt = getopt (argc, argv, "n:g:p:w:f:s:o:b:")) != -1)
+	int l = 0;
+
+	if(argc == 1){
+		help();
+		return 1;
+	}
+
+	while((opt = getopt (argc, argv, "n:g:p:w:f:s:o:b:l:")) != -1)
 	{
 		switch (opt)
 		{
@@ -54,7 +60,11 @@ int main(int argc, char **argv)
 				break;
 
 			case 'b':
-			        b = atoi(optarg);	
+				b = atoi(optarg);
+				break;
+
+			case 'l':
+				l = atoi(optarg);
 				break;
 		}
 	}
@@ -92,11 +102,14 @@ int main(int argc, char **argv)
 	stworz_folder();
 
 	//Grafika pliku wejściowego
-	if(g>0){
-		if(o == 0)to_png(m, 0, f);
-		if(o == 1)to_pbm(m, 0, f);
+	if(l == 1)
+	{
+		if(g>0){
+			if(o == 0)to_png(m, 0, f);
+			if(o == 1)to_pbm(m, 0, f);
+		}
 	}
-
+	
 	//Wczytanie pliku do zapisu końcowego
 	FILE *out = fopen(w, "w");
 	if(out == NULL)
@@ -128,13 +141,14 @@ int main(int argc, char **argv)
 
 
 void help(){
-	printf("Użycie: ./ca\n");
+	printf("Użycie: ./ca -n liczba_iteracji -p nazwa_pliku -w nazwa_pliku -g liczba_grafik -f nazwa_grafik -s 0/1 -o 0/1 -b 0/1 -l 0/1\n");
 	printf("   -n liczba_generacji (wymagane)\n"); 
 	printf("   -p plik_wejściowy (wymagane) \n");
 	printf("   -w plik_wyjściowy (wymagane)\n");
-	printf("   -g liczba_grafik (w przypadku nie podania przyjmuje wartość n\n");
-	printf("   -f nazwa_grafik \n");
-	printf("   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
-	printf("   -o typ tworzonych plików (0- PNG, 1- PBM)(domyślnie 0)\n");
-	printf("   -b zmienia zasady gry (0- boki są komurkami martwymi, 1- boki są komurkami żywymi\n");
+	printf("   -g liczba_grafik (w przypadku nie podania przyjmuje wartość n)\n");
+	printf("   -f nazwa_grafik (w przypadku braku podania pokazują się tylko numerki)\n");
+	printf("   -s pozwala na zmiane rodzaju sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
+	printf("   -o pozwala wybrać typ tworzonych plików (0- PNG, 1- PBM)(domyślnie 0)\n");
+	printf("   -b pozawla na ustalenie jakie komurki będą na brzegach (0- martwe, 1- żywe(domyślnie 0)\n");
+	printf("   -l pozwala na stworzenie graliki pliku wejściowego(0- nie tworzy, 1- tworzy)(domyślnie 0)\n");
 }

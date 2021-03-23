@@ -7,14 +7,18 @@
 
 void to_pbm(matrix_t * m, int g, char *f)
 {
+	//Tworzenie nazwy
 	char nazwa[100];
 	nazwa_pliku_pbm(nazwa, f, g);
+	
+	//Otwarcie pliku
 	FILE *gra = fopen(nazwa, "w");		
 	if(gra == NULL){
 		printf("%s, nie mogę wczytać pliku", nazwa);
 		exit (EXIT_FAILURE);
 	}	
 	
+	//Wczytywanie do pliku
 	fprintf(gra, "P1\n"); 	
 	fprintf(gra, "#komentarz\n"); 	
 	fprintf(gra, "%d %d\n", m->rn, m->cn); 		

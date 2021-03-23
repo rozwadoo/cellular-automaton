@@ -62,25 +62,29 @@ void save_png_to_file (matrix_t * m, const char *path, int qq)
 
 
     FILE *fp = fopen (path, "wb");
-    if (! fp) {
-    	printf("ra");
+    if (fp == NULL) {
+    	printf("Nie moge otworzyć pliku do zapisu");
+	exit(EXIT_FAILURE);
     }
 
     png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     
     if (png_ptr == NULL) {
-        goto png_create_write_struct_failed;
+    	printf("png_create_write_struct failed");
+	exit(EXIT_FAILURE);
     }
 
     info_ptr = png_create_info_struct (png_ptr);
     if (info_ptr == NULL) {
-        goto png_create_info_struct_failed;
+    	printf("png_create_info_struct failed");
+	exit(EXIT_FAILURE);
     }
 
     png_init_io (png_ptr, fp);
     
     if (setjmp (png_jmpbuf (png_ptr))) {
-        goto png_failure;
+    	printf("Error during writing header");
+	exit(EXIT_FAILURE);
     }
 
 	    png_set_IHDR (png_ptr,
@@ -104,12 +108,9 @@ void save_png_to_file (matrix_t * m, const char *path, int qq)
     for (y = 0; y < height; y++) {
         png_free (png_ptr, row_pointers[y]);
     }
+    
     png_free (png_ptr, row_pointers);
-
- png_failure:
- png_create_info_struct_failed:
-    png_destroy_write_struct (&png_ptr, &info_ptr);
- png_create_write_struct_failed:
+    
     fclose (fp);
 
 }

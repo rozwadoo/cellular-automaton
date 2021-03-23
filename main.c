@@ -15,16 +15,12 @@ int main(int argc, char **argv)
 	int g;
 	char *p = NULL;
 	char *w = NULL;
-	char *f = NULL;
+	char *f = "";
 	int s = 0;	//domyślnie rozważane jest sąsiedztwo Moore'a
 	int opt;
+	int o = 0;
 	
-	if(argc < 5){
-		help();
-		return 1;
-	}
-
-	while((opt = getopt (argc, argv, "n:g:p:w:f:s:")) != -1)
+	while((opt = getopt (argc, argv, "n:g:p:w:f:s:o:")) != -1)
 	{
 		switch (opt)
 		{
@@ -47,12 +43,32 @@ int main(int argc, char **argv)
 			case 'f':
 				f = optarg;
 				break;
+		
 			case 's':
 				s = atoi(optarg);
 				break;
+		
+			case 'o':
+				o = atoi(optarg);
+				break;
 		}
 	}
+
+	if( n == 0){
+		printf("Nie podano ilości generacji.");
+		help();
+		exit (EXIT_FAILURE);
+	}
+
+	if( g == 0)g = n;
 	
+	if(p == NULL){
+		printf("Nie podano pliku wejściowego.");
+		help();
+		exit (EXIT_FAILURE);
+	}
+
+	//Wczytanie pliku dancyh	
 	FILE *p_wej = fopen(p, "r");
 	if(p_wej == NULL)
 	{
@@ -60,15 +76,21 @@ int main(int argc, char **argv)
 		help();
 		exit (EXIT_FAILURE);
 	}
-	
-	matrix_t * m = malloc(sizeof *m);
 
+	//Alokowanie pamięci
+	matrix_t * m = malloc(sizeof *m);
 	start_matrix(m, p_wej);
 	
+	//Uzupełnianie o żywe komurki
 	uzupelnij_matrix(m, p_wej);
-	
-	stworz_folder();
 
+	//Grafika pliku wejściowego
+	if(g>0){
+		if(o == 0)to_png(m, 0, f);
+		if(o == 1)to_pbm(m, 0, f);
+	}
+
+	//Wczytanie pliku do zapisu końcowego
 	FILE *out = fopen(w, "w");
 	if(out == NULL)
 	{
@@ -76,16 +98,20 @@ int main(int argc, char **argv)
 		help();
 		exit (EXIT_FAILURE);
 	}
+
+	stworz_folder();	
 	
+	//Kolejnie iteracje + tworzenie grafik pbm/png + zapis końcowy
 	int i;
 	for(i = 0; i < n; i++)
 	{
 		iterate(m, s);
 		if(i == n-1)zapis_koncowy(m, out);
-		if(i < g)to_png(m, i+1, f);
-		//if(i < g)to_pbm(m, i+1, f);
+		if(o == 0 && i < g)to_png(m, i+1, f);
+		if(o == 1 && i < g)to_pbm(m, i+1, f);
 	}
 
+	//Zwalnianie pamięci
 	free_matrix(m);
 
 }
@@ -94,10 +120,11 @@ int main(int argc, char **argv)
 
 void help(){
 	printf("Użycie: ./ca\n");
-	printf("   -n liczba_generacji\n"); 
-	printf("   -g liczba_grafik \n");
-	printf("   -p plik_wejściowy \n");
-	printf("   -w plik_wyjściowy \n");
+	printf("   -n liczba_generacji (wymagane)\n"); 
+	printf("   -p plik_wejściowy (wymagane) \n");
+	printf("   -w plik_wyjściowy (wymagane)\n");
+	printf("   -g liczba_grafik (w przypadku nie podania przyjmuje wartość n\n");
 	printf("   -f nazwa_grafik \n");
 	printf("   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
+	printf("   -o typ tworzonych plików (0- PNG, 1- PBM)(domyślnie 0)\n");
 }

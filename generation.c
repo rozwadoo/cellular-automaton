@@ -64,7 +64,10 @@ void zapis_koncowy(matrix_t * m, FILE *out)
 	{
 		for(j = 0; j < m->cn; j++)
 		{
-			fprintf(out, "%d ", m->e[i][j]);
+			if(m->e[i][j] == 2)
+				fprintf(out, "%d ", 1);
+			else
+				fprintf(out, "%d ", m->e[i][j]);	
 		}
 		fprintf(out, "\n");
 	}

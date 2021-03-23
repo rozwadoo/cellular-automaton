@@ -7,7 +7,7 @@
 #include "images.h"
 #include "generation.h"
 
-void save_png_to_file (matrix_t * m, const char *path, int qq)
+void save_png_to_file (matrix_t * m, char *path, int qq)
 {
     png_structp png_ptr = NULL;
     
@@ -62,8 +62,8 @@ void save_png_to_file (matrix_t * m, const char *path, int qq)
 
 
     FILE *fp = fopen (path, "wb");
-    if (fp == NULL) {
-    	printf("Nie moge otworzyć pliku do zapisu");
+    if (!fp) {
+    	printf("Nie moge otworzyć pliku do zapisu\n");
 	exit(EXIT_FAILURE);
     }
 

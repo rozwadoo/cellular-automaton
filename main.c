@@ -84,6 +84,9 @@ int main(int argc, char **argv)
 	//Uzupełnianie o żywe komurki
 	uzupelnij_matrix(m, p_wej);
 
+	//Tworzenie folderu
+	stworz_folder();
+
 	//Grafika pliku wejściowego
 	if(g>0){
 		if(o == 0)to_png(m, 0, f);
@@ -98,8 +101,6 @@ int main(int argc, char **argv)
 		help();
 		exit (EXIT_FAILURE);
 	}
-
-	stworz_folder();	
 	
 	//Kolejnie iteracje + tworzenie grafik pbm/png + zapis końcowy
 	int i;

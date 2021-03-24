@@ -54,10 +54,10 @@
 		if(i != 0 && j == 0) if(m->e[i-1][w-1] > 1) s += 1;			
        		if(i == 0 && j != w - 1) if(m->e[h-1][j+1] > 1) s += 1;		//prawy, górny sąsiad
 		if(i != 0 && j == w - 1) if(m->e[i-1][0] > 1) s += 1;		
-		if(i != h - 1 && j == 0) if(m->e[i-1][w-1] > 1) s += 1;		//lewy, dolny sąsiad
+		if(i != h - 1 && j == 0) if(m->e[i+1][w-1] > 1) s += 1;		//lewy, dolny sąsiad
 		if(i == h - 1 && j != 0) if(m->e[0][j-1] > 1) s += 1;		
         	if(i == h - 1 && j != w - 1) if(m->e[0][j+1] > 1) s += 1;	//prawy, dolny sąsiad
-		if(i != h - 1 && j == w - 1) if(m->e[i-1][0] > 1) s += 1;		
+		if(i != h - 1 && j == w - 1) if(m->e[i+1][0] > 1) s += 1;		
     		return s;
 	}
 

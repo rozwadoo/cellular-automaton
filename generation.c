@@ -14,11 +14,11 @@ void iterate (matrix_t * m, int rs, int b)
 {
     	int h = m->rn;
     	int w = m->cn;
-	//wybór używanych funkcji w zależności od rodzaju sąsiedztwa
-	int (*fun)(int, int, matrix_t *) = NULL;
+	//wybór używanych funkcji w zależności od rodzaju sąsiedztwa	
+	int (*fun)(int, int, matrix_t *);
 	if(rs == 1) fun = VN;
 	if(rs == 0) fun = Moore;
-	int (*fun2)(int, int, matrix_t *) = NULL;
+	int (*fun2)(int, int, matrix_t *);
 	if(rs == 1) fun2 = VN2;
 	if(rs == 0) fun2 = Moore2;
     	for(int i = 0; i < h; ++i)

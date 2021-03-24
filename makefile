@@ -16,7 +16,10 @@ pd0: ca test/pentadecathlon
 	./ca -n 30 -p test/pentadecathlon -w res_pd -g 30 -f g_pd -s 0 -o 0 -b 0 
 
 pd1: ca test/pentadecathlon
-	./ca -n 30 -p test/pentadecathlon -w res_pd1 -g 30 -f g_pd1 -s 0 -o 0 -b 1 
+	./ca -n 30 -p test/pentadecathlon -w res_pd1_ -g 30 -f g_pd1_ -s 0 -o 0 -b 1 
+
+glider: ca test/glider
+	./ca -n 120 -p test/glider -w res_gl -g 120 -f g_gl -s 0 -o 0 -b 0 
 
 clear: 
 	rm -r Stworzone_pliki

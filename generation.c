@@ -12,41 +12,35 @@
 
 void iterate (matrix_t * m, int rs, int b)
 {
-    int h = m->rn;
-    int w = m->cn;
-    for(int i = 0; i < h; ++i)
-    {
-        for(int j = 0; j < w; ++j)	//pętla po wszystkich elementach macierzy
-            {
-                int s = 0;	//liczba żywych sąsiadów
-		// pierwszy if sprawdza czy dany typ sąsiada powinien być sprawdzany w przypadku badanej komórki
-		// drugi if sprawdza czy ten sąsiad jest żywy
-                if(i != 0) if(m->e[i-1][j] > 1) s += 1;		//środkowy, górny sąsiad 
-                if(j != 0) if(m->e[i][j-1] > 1) s += 1;		//lewy, środkowy sąsiad
-                if(j!= w - 1) if(m->e[i][j+1] > 1) s += 1;		//prawy, środkowy sąsiad
-                if(i != h - 1) if(m->e[i+1][j] > 1) s += 1;	//środkowy, dolny sąsiad
-		if(rs == 0)
-		{
-			if(i != 0 && j!= 0) if(m->e[i-1][j-1] > 1) s += 1;		//lewy, górny sąsiad
-                	if(i != 0 && j!= w - 1) if(m->e[i-1][j+1] > 1) s += 1;		//prawy, górny sąsiad
-			 if(i != h - 1 && j!= 0) if(m->e[i+1][j-1] > 1) s += 1;		//lewy, dolny sąsiad
-                	if(i != h - 1 && j!= w - 1) if(m->e[i+1][j+1] > 1) s += 1;	//prawy, dolny sąsiad
-                }
+    	int h = m->rn;
+    	int w = m->cn;
+	//wybór używanych funkcji w zależności od rodzaju sąsiedztwa
+	int (*fun)(int, int, matrix_t *) = NULL;
+	if(rs == 1) fun = VN;
+	if(rs == 0) fun = Moore;
+	int (*fun2)(int, int, matrix_t *) = NULL;
+	if(rs == 1) fun2 = VN2;
+	if(rs == 0) fun2 = Moore2;
+    	for(int i = 0; i < h; ++i)
+    	{
+        	for(int j = 0; j < w; ++j)	//pętla po wszystkich elementach macierzy
+        	{
+            		int s = fun(i, j, m);	//właściwe liczenie liczby żywych sąsiadów
+			if(b == 1) s += licz_boki(i, j, h, w, rs);	//ewentualne dodanie żywych krawędzi
+			if(b == 2) s += fun2(i, j, m);			//macierz działająca "na około"		
 
-		if(b == 1) s += licz_boki(i, j, h, w);
-
-		if(m->e[i][j] == 2) // jeśli badana komórka jest była żywa
-		{
-                    if(s == 2 || s == 3) m->e[i][j] = 2;
-                    else m->e[i][j] = 3;
-                }
-                else // jeśli badana komórka była martwa
-                {
-                    if(s == 3) m->e[i][j] = 1;
-                    else m->e[i][j] = 0;
-                }
-            }   
-        }
+			if(m->e[i][j] == 2) // jeśli badana komórka była żywa
+			{
+                		if(s == 2 || s == 3) m->e[i][j] = 2;
+                		else m->e[i][j] = 3;
+            		}
+            		else // jeśli badana komórka była martwa
+            		{
+                		if(s == 3) m->e[i][j] = 1;
+                		else m->e[i][j] = 0;
+            		}
+        	}   
+    	}
        
 
 	for(int i = 0; i < h; ++i)	//update macierzy - zastępowanie komórek umierających martwymi, a rodzących się żywymi
@@ -136,37 +130,3 @@ void free_matrix(matrix_t * m)
 {
 	free(m);
 }
-
-
-
-/*
-int main( int argc, char **argv)
-{
-    int n = atoi(argv[1]);
-    m = malloc(sizeof *m);
-    if (m == NULL)
-    return NULL;
-  if ((m->e =
-       malloc ((size_t) 5 * (size_t) 4 * sizeof *m->e)) == NULL) {
-    free (m);
-    return NULL;
-  }
-    m->rn = 5;
-    m->cn = 4;
-    int v[20] = { 2, 0, 0, 2, 0, 2, 2, 2, 2, 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0};
-    for( int i = 0; i < 20; ++i)
-    {
-        m->e[i] = v[i];
-    }
-    for(int i = 0; i < m->rn; ++i)
-        {
-            printf("\n");
-            for(int j = 0; j < m->cn; ++j)
-            {
-                printf("%d ", m->e[i*m->cn + j]);
-            }
-        }
-    iterate(n);
-    return 0;
-}
-*/

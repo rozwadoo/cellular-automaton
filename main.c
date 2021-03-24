@@ -115,9 +115,10 @@ int main(int argc, char **argv)
 		if(o == 0)
 		{
 			if(i < g)to_png(m, i+1, f);
-			else
-			if(i < g)to_pbm(m, i+1, f);
 		}
+		else
+			if(i < g)to_pbm(m, i+1, f);
+		
 	}
 
 	//Zwalnianie pamięci
@@ -136,5 +137,5 @@ void help(){
 	printf("   -f nazwa_grafik \n");
 	printf("   -s rodzaj sąsiedztwa (0- Moore'a, 1- von Neumanna)(domyślnie 0)\n");
 	printf("   -o typ tworzonych plików (0- PNG, 1- PBM)(domyślnie 0)\n");
-	printf("   -b zmienia zasady gry (0- boki są komurkami martwymi, 1- boki są komurkami żywymi\n");
+	printf("   -b zmienia zasady gry (0- boki są komurkami martwymi, 1- boki są komurkami żywymi, 2- pierwszy wiersz jest dolną krawędzią ostatniego wiersza, pierwsza kolumna jest prawą krawędzią ostatniej kolumny i na odwrót)(domyślnie 0)\n");
 }
